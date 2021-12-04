@@ -6,15 +6,15 @@ from matplotlib import pyplot as plt
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input", required=True)
-    parser.add_argument("-o", "--output", default="out.png")
+    parser.add_argument("-i", "--input", required=True, help="input image path")
+    parser.add_argument("-o", "--output", default="out.png", help="output image path")
+    parser.add_argument("--min-y", type=int, default=0, help="min y carriage coordinate")
+    parser.add_argument("--max-y", type=int, default=-1, help="max y carriage coordinate")
     return parser.parse_args()
 
 
-def process_img(img):
+def process_img(img, min_y, max_y):
     # adapt image to our case
-    min_y = 100
-    max_y = 600
     cropped_img = img[min_y:max_y, :]
 
     # make image more contrast
@@ -66,7 +66,7 @@ def main():
     img = cv2.imread(params.input)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     try:
-        percent, processed_img = process_img(img)
+        percent, processed_img = process_img(img, params.min_y, params.max_y)
     except Exception as e:
         print(f"Processing failed: {e}")
         percent = 0
